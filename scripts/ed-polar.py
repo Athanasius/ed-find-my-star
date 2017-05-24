@@ -18,6 +18,11 @@ import numpy as np
 # |      name      |    x    |    y     |    z    |
 # | Alpha Centauri | 3.03125 | -0.09375 | 3.15625 |
 
+# Barnard's Star:
+#     FK5 coord. (ep=J2000 eq=2000) : 17 57 48.498 +04 41 36.21 [ 15.10 10.72 90 ]
+#     Parallaxes (mas): 548.31 [1.51] A 2007A&A...474..653V
+# | Barnard's Star | -3.03125 | 1.375 | 4.9375 |
+
 edX = 3.03125
 edY = -0.09375
 edZ = 3.15625
@@ -25,10 +30,12 @@ edZ = 3.15625
 # then divide by 24.0 to get range 0.0 to 1.0, then multiply by 360.0 for
 # degrees.
 inRA = (14.0 + (39.0 / 60.0) + (36.204 / 3600.0)) / 24.0 * 360.0
+inRA = (17.0 + (57.0 / 60.0) + (48.498 / 3600.0)) / 24.0 * 360.0
 # FK5 Dec is already in degrees, minutes, seconds, -1.0 here is simply
 # because it's negative
-inDec = -1.0 * (60.0 + (50.0 / 60.0) + (8.23 / 3600.0))
+inDec = 1.0 * (4.0 + (41.0 / 60.0) + (36.21 / 3600.0))
 inParallax = 0.742
+inParallax = 0.54831
 lightYearsPerParsec = 3.261563777
 inR = 1 / inParallax * lightYearsPerParsec
 
@@ -139,15 +146,21 @@ def main():
   #ed_xy = project_points(edX, edY, edZ, 1, 1, 0)
   #in_xy = project_points(inX, inY, inZ, 1, 1, 0)
   ed_xy = np.array([edX, edZ, 0])
-  print(ed_xy)
+#  print(ed_xy)
   in_xy = np.array([inX, inY, 0])
-  print(in_xy)
+#  print(in_xy)
   # Angles between both and (1, 0 , 0)
   ed_xy_angle = m.degrees(angle_between(ed_xy, np.array([1, 0, 0])))
+  print("ED     xy-angle = %8.5f" % ed_xy_angle)
   in_xy_angle = m.degrees(angle_between(in_xy, np.array([1, 0, 0])))
+  print("IN     xy-angle = %8.5f" % in_xy_angle)
   delta_ra = ed_xy_angle - in_xy_angle
+  print("ED - IN angle   = %8.5f" % delta_ra)
+  delta_ra = -173.74352
   # And the delta between Decs
   delta_dec = edDec - inDec
+  print("delta_dec = %8.5f" % delta_dec)
+  delta_dec = 59.60835
 
   #print(ed_xy)
   #print(in_xy)
@@ -156,13 +169,15 @@ def main():
   #print("inDec = %8.5f" % inDec)
   #print("ED -> In Dec angle = %8.5f" % delta_dec)
 
-  outR = inR
+  outR = edDistance
   outRA = inRA + delta_ra
   outDec = inDec + delta_dec
+  print("OUT      R: %8.5f   RA: %8.5f  Dec: %8.5f" % (outR, outRA, outDec))
   (outX, outY, outZ) = sphericalToCartesian(outR, outRA, outDec)
 
-  print("OUT      x: %8.5f    y: %8.5f    z: %8.5f" % (outX, outY, outZ))
-  print("edDistance: %8.5f\tdistance: %8.5f" % (edDistance, distance))
+  print("OUT      x: %8.5f    y: %8.5f    z: %8.5f" % (outX, outZ, outY))
+  print("ED       x: %8.5f    y: %8.5f    z: %8.5f" % (edX, edY, edZ))
+  #print("edDistance: %8.5f\tdistance: %8.5f" % (edDistance, distance))
 
 if __name__ == '__main__':
   main()
