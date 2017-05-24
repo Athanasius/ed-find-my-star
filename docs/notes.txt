@@ -1,0 +1,17 @@
+Purpose
+=======
+
+  Take a Right Ascension (RA), Declination (Dec) and if available
+parallax/distance and determine where in the ED galaxy that should be.
+Combined with lookups of names using simbad or similar this can allow
+for finding a known real-world star in the ED galaxy.
+
+Method
+======
+
+  Take RA/Dec and convert into (still polar) co-ordinates in the ED
+galaxy frame of reference.
+
+  Then apply any distance data to get approximate co-ordinates.
+
+  Now lookup in EDSM/EDDB derived database to find candidates.
